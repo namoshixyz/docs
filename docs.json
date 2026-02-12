@@ -44,7 +44,8 @@
               "web/text-records",
               "web/avatars",
               "web/primary-names",
-              "web/listing-names"
+              "web/listing-names",
+              "web/subgraph"
             ]
           },
           {

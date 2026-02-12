@@ -1,0 +1,100 @@
+---
+title: "Subgraph"
+description: "Query indexed Namoshi data using GraphQL"
+---
+
+The Namoshi Subgraph is the most efficient way to query complex data from the protocol, such as listing all names owned by an address, finding recent registrations, or tracking wrapped name state.
+
+## Endpoint
+
+You can send GraphQL POST requests to the following endpoint:
+
+```text
+https://api.goldsky.com/api/public/project_cmaol8j93l14501xh5qx5b9m0/subgraphs/namoshi-subgraph/1.1.0/gn
+```
+
+## Core Entities
+
+The subgraph indexes several key entities. You can explore the full schema in the [Playground](#playground).
+
+| Entity | Description |
+| :--- | :--- |
+| `Domain` | The core entity for any name (e.g., `nemo.btc`). Tracks owner, resolver, and expiry. |
+| `Registration` | Records registration details, including cost and registration date. |
+| `WrappedDomain` | Details for names wrapped in the `NameWrapper` (ERC-1155). |
+| `Account` | Tracks all domains and registrations associated with a specific address. |
+| `Resolver` | Indexed data from resolver contracts (text records, multi-coin addresses). |
+
+## Example Queries
+
+### List names owned by an address
+This query returns all names where the address is the current owner.
+
+```graphql
+query GetNamesByOwner($owner: String!) {
+  domains(where: { owner: $owner }) {
+    id
+    name
+    labelName
+    createdAt
+    expiryDate
+    isBTC
+  }
+}
+```
+
+### Search for names starting with a prefix
+Useful for search bars and autocomplete components.
+
+```graphql
+query SearchNames($prefix: String!) {
+  domains(where: { name_starts_with: $prefix }, first: 10) {
+    name
+    owner {
+      id
+    }
+  }
+}
+```
+
+### Get recently registered names
+```graphql
+query GetRecentRegistrations {
+  registrations(orderBy: registrationDate, orderDirection: desc, first: 5) {
+    labelName
+    registrationDate
+    registrant {
+      id
+    }
+  }
+}
+```
+
+### Query text records for a name
+```graphql
+query GetTextRecords($node: String!) {
+  domains(where: { id: $node }) {
+    resolver {
+      texts
+    }
+  }
+}
+```
+
+## Playground
+
+Explore the schema and test your queries directly in the browser:
+
+<Card
+  title="GraphQL Explorer"
+  icon="database"
+  href="https://api.goldsky.com/api/public/project_cmaol8j93l14501xh5qx5b9m0/subgraphs/namoshi-subgraph/1.1.0/gn"
+>
+  Open the interactive GraphQL playground to view the full schema and run test queries.
+</Card>
+
+## Technical Details
+
+- **Network:** Citrea Mainnet (Chain ID: 4114)
+- **Start Block:** 2534703
+- **Indexed Contracts:** Registry, Base Registrar, Controller, Name Wrapper, Public Resolver.
