@@ -1,0 +1,29 @@
+---
+title: "Smart Contracts"
+description: "Deployment addresses and technical details of Namoshi contracts"
+---
+
+Namoshi is a decentralized identity system built on top of the Citrea blockchain. It consists of several interconnected smart contracts that handle registration, resolution, and name management.
+
+## Core Contract Addresses
+
+These are the official Namoshi contracts deployed on **Citrea Mainnet (Chain ID: 4114)**.
+
+| Contract | Address |
+| :--- | :--- |
+| **Namoshi Registry** | `0x9fA2e2370dF8014EE485172bF79d10D6756034A8` |
+| **Universal Resolver** | `0xc5Ed1fA34AD1F23F0cD2E36DB288290488B1B493` |
+| **Base Registrar** | `0xf264775e533816Ff2b4B8988697A19662ba767B4` |
+| **ETH Registrar Controller** | `0x6f315a6b09B8B3D84879B5436E6738561C79037C` |
+| **Name Wrapper (ERC-1155)** | `0xd141a197c8a68d9175c201229ae3bf5a7972e8b1` |
+| **Public Resolver** | `0x716342c3231a50b55522f16f55ed76b5bf29df76` |
+| **Reverse Registrar** | `0xd896bee053683f1fd12e549c80f6393494ae243f` |
+
+## Technical Architecture
+
+The Namoshi system is designed to be highly modular and upgradable.
+
+1.  **Registry**: The single source of truth for ownership and resolver mappings.
+2.  **Registrars**: Specialized contracts that own top-level domains (like `.btc` and `.citrea`) and issue subdomains to users.
+3.  **Resolvers**: Standardized contracts that store the actual data (addresses, text records, avatars) associated with a name.
+4.  **Name Wrapper**: A layer on top of the registry that enables advanced features like ERC-1155 compatibility and permission fuses.

@@ -1,0 +1,61 @@
+---
+title: "Wallet Integration"
+description: "Display Namoshi names in your WalletConnect or connection button"
+---
+
+Displaying Namoshi names instead of hexadecimal addresses significantly improves the user experience of your dApp.
+
+## Connection Buttons (RainbowKit, ConnectKit)
+
+If you are using popular libraries like RainbowKit or ConnectKit, they will automatically use the Namoshi names if you configure the Citrea chain correctly with the `ensRegistry` and `ensUniversalResolver` addresses.
+
+### RainbowKit Configuration
+
+```typescript
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { citrea } from './chains'; // Your custom citrea definition
+
+// Ensure citrea chain has Namoshi (ENS) contract addresses!
+const config = getDefaultConfig({
+  appName: 'My Namoshi Dapp',
+  projectId: 'YOUR_PROJECT_ID',
+  chains: [citrea],
+  ssr: true, 
+});
+```
+
+<Warning>
+  **Common Pitfall**: If your `useEnsName` or `useEnsAddress` hooks are returning `null` or failing, double-check your `citrea` chain definition. It must contain the Namoshi addresses for `ensRegistry` and `ensUniversalResolver`. Standard libraries will not find Namoshi on Citrea without these explicit pointers.
+</Warning>
+
+## Manual Display in UI
+
+If you are building a custom connection button, use the `useEnsName` hook from Wagmi to resolve the user's address to their Namoshi primary name.
+
+```tsx
+import { useAccount, useEnsName, useEnsAvatar } from 'wagmi'
+import { normalize } from 'viem/ens'
+
+function Profile() {
+  const { address } = useAccount()
+  const { data: name } = useEnsName({
+    address,
+    chainId: 4114, // Citrea Mainnet
+  })
+  const { data: avatar } = useEnsAvatar({
+    name: normalize(name!),
+    chainId: 4114,
+  })
+
+  return (
+    <div>
+      {avatar && <img src={avatar} alt="Avatar" />}
+      <div>{name ? name : address}</div>
+    </div>
+  )
+}
+```
+
+## Best Practices
+- **Truncation**: If a Namoshi name is too long, use CSS `text-overflow: ellipsis`. Never truncate a Namoshi name manually (e.g., `namoshi...citrea`), as it breaks the identity.
+- **Caching**: Wagmi handles caching automatically, but if you are using raw `viem`, ensure you cache results to avoid excessive RPC calls.

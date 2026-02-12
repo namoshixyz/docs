@@ -1,0 +1,44 @@
+---
+title: "Registry & Registrars"
+description: "Documentation for the core registry and domain registrars"
+---
+
+## Namoshi Registry
+
+The Registry (`ENSRegistry.sol`) is the central component of the Namoshi protocol.
+
+- **Address**: `0x9fA2e2370dF8014EE485172bF79d10D6756034A8`
+
+### Core Functions
+
+- `owner(bytes32 node)`: Returns the owner of a node.
+- `resolver(bytes32 node)`: Returns the resolver address for a node.
+- `setSubnodeOwner(bytes32 node, bytes32 label, address owner)`: Creates or updates a subnode.
+
+---
+
+## Base Registrar
+
+The Base Registrar (`BaseRegistrarImplementation.sol`) owns the root nodes for `.btc` and `.citrea` and manages domain ownership as ERC-721 tokens.
+
+- **Address**: `0xf264775e533816Ff2b4B8988697A19662ba767B4`
+- **Supported TLDs**: `.btc`, `.citrea`
+
+### Core Functions
+
+- `reclaim(uint256 id, address owner)`: Updates the registry record to match the NFT owner.
+- `nameExpires(uint256 id)`: Returns the expiration timestamp of a name.
+
+---
+
+## ETH Registrar Controller
+
+The Controller (`ETHRegistrarController.sol`) is the primary interface for users to register and renew names.
+
+- **Address**: `0x6f315a6b09B8B3D84879B5436E6738561C79037C`
+
+### Core Functions
+
+- `rentPrice(string name, uint256 duration)`: Calculates the cost in cBTC for a registration.
+- `register(string name, address owner, uint256 duration, ...)`: Registers a new name.
+- `renew(string name, uint256 duration)`: Renews an existing name.

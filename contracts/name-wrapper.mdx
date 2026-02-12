@@ -1,0 +1,22 @@
+---
+title: "Name Wrapper"
+description: "Tokenizing and securing subdomains"
+---
+
+## Name Wrapper
+
+The Name Wrapper (`NameWrapper.sol`) wraps existing Namoshi names into ERC-1155 tokens. This enables subdomains to be treated as independent NFTs and adds a powerful permission system called "Fuses".
+
+- **Address**: `0xd141a197c8a68d9175c201229ae3bf5a7972e8b1`
+
+### Key Features
+
+- **ERC-1155**: Standard compatibility for marketplaces and wallets.
+- **Fuses**: Burnable permissions that allow owners to lock records or prevent unwrapping.
+- **Subdomain Issuance**: Simplifies the process of creating and managing subdomains.
+
+### Core Functions
+
+- `wrap(bytes name, address wrappedOwner, address resolver)`: Wraps an existing name.
+- `setSubnodeRecord(bytes32 node, string label, ...)`: Creates and wraps a subdomain in one call.
+- `setFuses(bytes32 node, uint16 fuses)`: Burns permissions for a name.

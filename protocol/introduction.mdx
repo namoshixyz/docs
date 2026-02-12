@@ -1,0 +1,49 @@
+---
+title: "Introduction"
+description: "Overview of the Namoshi Protocol"
+---
+
+The Namoshi Protocol is a distributed, open, and extensible naming system based on the Citrea blockchain.
+
+## Namoshi Architecture
+
+Namoshi has two principal components:
+
+1. The **registry**: The core contract that maintains a mapping of all domain names.
+2. **Resolvers**: Smart contracts that translate names into addresses and other resources.
+
+Namoshi operates similarly to DNS (Domain Name System) but with significantly different architecture due to the capabilities and constraints of the Citrea blockchain. typically, Namoshi names are human-readable names like `nemo.btc` or `nemo.citrea` that map to machine-readable identifiers such as Citrea (EVM) addresses, other cryptocurrency addresses, content hashes, and metadata.
+
+### Top-Level Domains
+
+Unlike ENS which primarily operates on `.eth`, Namoshi focuses on bringing decentralized identity to the Bitcoin ecosystem via:
+
+- **.btc**: Represents Bitcoin-native identities.
+- **.citrea**: Represents identities on the Citrea rollup.
+
+## The Registry
+
+The Namoshi registry is a single smart contract that maintains a list of all domains and subdomains. For each domain, it stores three pieces of information:
+
+- The **owner** of the domain.
+- The **resolver** for the domain.
+- The **caching time-to-live (TTL)** for all records under the domain.
+
+The owner of a domain may be either an external account (a user) or a smart contract. A registrar is simply a smart contract that owns a domain and issues subdomains of that domain to users that follow some set of rules defined in the registrar contract.
+
+## Resolvers
+
+Resolvers are responsible for the actual process of translating names into addresses. Any contract that implements the relevant standards may act as a resolver in Namoshi.
+
+When resolving a name in Namoshi:
+
+1. The user asks the registry for the resolver responsible for the name.
+2. The user asks that resolver for the answer to their query.
+
+## Discount System
+
+Namoshi implements a unique discount system for domain registration, allowing users to reduce costs through:
+
+- **Referrals**: Secure referral codes.
+- **NFT Ownership**: Holding specific ERC721 tokens.
+- **Whitelists**: Merkle-proof based whitelists.

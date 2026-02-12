@@ -1,0 +1,37 @@
+---
+title: "Reverse Registrar"
+description: "Mapping addresses to names"
+---
+
+The Reverse Registrar is responsible for managing "reverse" resolution: translating a Citrea address back into a Namoshi name.
+
+## How it Works
+
+In Namoshi, reverse resolution is handled by a special top-level domain: `.addr.reverse`. 
+
+When an address wants to set its primary name:
+1. It claims its own node under `[address].addr.reverse`.
+2. It sets a resolver for this node (usually the standard Public Resolver).
+3. It sets the `name` record on that resolver to the desired Namoshi name.
+
+## Primary Names
+
+A "Primary Name" (also known as a Reverse Record) is the name that an address identifies as its main identity. When applications see an address, they can query the Reverse Registrar to find the associated name.
+
+### Setting a Primary Name
+
+The `ReverseRegistrar.sol` contract provides a convenient function for users to set their primary name in a single transaction:
+
+```solidity
+function setName(string memory name) public returns (bytes32);
+```
+
+This function:
+1. Calculates the node for the caller's address.
+2. Claims ownership of that node.
+3. Configures the default resolver.
+4. Sets the name record to the provided `name`.
+
+## Reverse Claimers
+
+For smart contracts that want to support reverse resolution, the `ReverseClaimer.sol` utility can be used. By inheriting from or calling a Reverse Claimer, a contract can easily claim its own reverse node upon deployment.

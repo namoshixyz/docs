@@ -1,0 +1,31 @@
+---
+title: "Resolvers"
+description: "Contracts for storing and retrieving name data"
+---
+
+## Public Resolver
+
+The Public Resolver (`PublicResolver.sol`) is the default implementation used by most Namoshi names. It supports a wide range of record types.
+
+- **Address**: `0x716342c3231a50b55522f16f55ed76b5bf29df76`
+- **Features**: Multi-coin support, Text records, Content hashes, Avatars.
+
+### Supported Interfaces
+
+The resolver implements `supportsInterface` (EIP-165) for:
+- `addr(bytes32)`
+- `text(bytes32, string)`
+- `contenthash(bytes32)`
+- `pubkey(bytes32)`
+
+---
+
+## Universal Resolver
+
+The Universal Resolver (`UniversalResolver.sol`) is a utility contract that simplifies resolution by finding the correct resolver and querying it in a single multicall.
+
+- **Address**: `0xc5Ed1fA34AD1F23F0cD2E36DB288290488B1B493`
+
+### Usage
+
+Most client libraries (Viem, Ethers) use this contract under the hood to resolve names efficiently.

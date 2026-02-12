@@ -1,0 +1,51 @@
+---
+title: "Discounts"
+description: "Save on domain registrations"
+---
+
+Namoshi offers a flexible discount system that allows users to register domains at reduced costs. This system is modular and supports multiple types of validation logic.
+
+## Discount Validators
+
+Namoshi uses `IDiscountValidator` implementations to check if a user is eligible for a discount. The main validator types are:
+
+### Referral System
+
+The `SecureReferralDiscountValidator` allows users to register domains using a referral code.
+
+- **Discount**: Users get a % off the registration fee.
+- **Security**: The referral code is cryptographically verified to ensure authenticity.
+
+### NFT Ownership
+
+The `ERC721DiscountValidator` and `MultipleNFTDiscountValidator` grant discounts to holders of specific NFT collections.
+
+- **Check**: The contract verifies `balanceOf(user) > 0` for the configured NFT contract.
+- **Stacking**: With `MultipleNFTDiscountValidator`, holding NFTs from multiple collections can stack discounts (up to a limit).
+
+### Whitelists
+
+The `MerkleWhitelistDiscountValidator` allows for efficient on-chain whitelist verification.
+
+- **Merkle Proof**: Users submit a Merkle proof along with their registration to prove they are in the whitelist.
+- **Gas Efficient**: Only the root hash is stored on-chain.
+
+## Applying Discounts
+
+To use a discount, pass the appropriate data to the `registerWithDiscount` function on the controller:
+
+```solidity
+function registerWithDiscount(
+    string memory name,
+    address owner,
+    uint256 duration,
+    address resolver,
+    bytes[] memory data,
+    bool reverseRecord,
+    uint16 fuses,
+    uint64 wrapperExpiry,
+    bytes memory discountData
+) public payable;
+```
+
+The `discountData` parameter contains the proof or signature required by the active `DiscountValidator`.

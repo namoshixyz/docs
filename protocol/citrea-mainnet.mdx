@@ -1,0 +1,74 @@
+---
+title: "Namoshi on Citrea"
+description: "Configuration and chain details for Citrea Mainnet"
+---
+
+Namoshi is the primary naming service for the Citrea ecosystem. Citrea is the first rollup that enhances the capabilities of Bitcoin with EVM-compatible smart contracts.
+
+## Chain Information
+
+To interact with Namoshi, you must configure your application to use the Citrea Mainnet.
+
+| Property | Value |
+| :--- | :--- |
+| **Network Name** | Citrea Mainnet |
+| **Chain ID** | `4114` |
+| **RPC URL** | `https://rpc.mainnet.citrea.xyz` |
+| **Currency Symbol** | `cBTC` |
+| **Block Explorer** | [explorer.mainnet.citrea.xyz](https://explorer.mainnet.citrea.xyz) |
+
+## Core Contract Addresses
+
+| Contract | Address |
+| :--- | :--- |
+| **Namoshi Registry** | `0x9fA2e2370dF8014EE485172bF79d10D6756034A8` |
+| **Universal Resolver** | `0xc5Ed1fA34AD1F23F0cD2E36DB288290488B1B493` |
+| **Base Registrar** | `0xf264775e533816Ff2b4B8988697A19662ba767B4` |
+| **Controller** | `0x6f315a6b09B8B3D84879B5436E6738561C79037C` |
+
+## Configuring Viem / Wagmi
+
+You can define the Citrea chain in your application using the following configuration:
+
+```typescript
+import { defineChain } from 'viem'
+
+export const citrea = defineChain({
+  id: 4114,
+  name: 'Citrea Mainnet',
+  nativeCurrency: {
+    name: 'Bitcoin',
+    symbol: 'cBTC',
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.mainnet.citrea.xyz'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Citrea Explorer',
+      url: 'https://explorer.mainnet.citrea.xyz',
+    },
+  },
+  contracts: {
+    ensRegistry: {
+      address: '0x9fA2e2370dF8014EE485172bF79d10D6756034A8',
+    },
+    ensUniversalResolver: {
+      address: '0xc5Ed1fA34AD1F23F0cD2E36DB288290488B1B493',
+    },
+  },
+})
+```
+
+### Important: Resolution Configuration
+
+For Wagmi and Viem hooks (like `useEnsName`, `useEnsAddress`, or `getEnsAddress`) to work on Citrea, your chain definition **must** explicitly include the Namoshi contract addresses in the `contracts` object. 
+
+Without these addresses, the libraries will default to looking for ENS on Ethereum Mainnet, which will fail to resolve your `.btc` and `.citrea` names.
+
+<Tip>
+  Always verify that `ensRegistry` and `ensUniversalResolver` are pointing to the Namoshi addresses listed above in your `wagmi` config or `viem` public client.
+</Tip>

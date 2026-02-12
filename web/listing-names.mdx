@@ -1,0 +1,34 @@
+---
+title: "Listing Names"
+description: "How to list all names owned by an address"
+---
+
+Listing all names owned by an address is not natively supported by the core Namoshi contracts. Instead, we recommend using the Namoshi Subgraph for efficient querying.
+
+## Using the Subgraph
+
+The Namoshi Subgraph indexes all registration and transfer events, making it easy to query names by owner.
+
+### GraphQL Query
+
+```graphql
+query GetNamesByOwner($owner: String!) {
+  domains(where: { owner: $owner }) {
+    name
+    labelName
+    createdAt
+    expiryDate
+  }
+}
+```
+
+## Using the Name Wrapper
+
+If the names are wrapped via the `NameWrapper.sol`, they are standard ERC-1155 tokens. You can use standard token indexing services or the `balanceOf` and `transfer` events to track ownership of wrapped names.
+
+## Client-Side Considerations
+
+If you are building a profile page, you should:
+1. Fetch the list of names from the Subgraph.
+2. Filter out expired names.
+3. Check which name is set as the **Primary Name**.

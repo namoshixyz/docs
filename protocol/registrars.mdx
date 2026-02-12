@@ -1,0 +1,49 @@
+---
+title: "The Registrar"
+description: "Managing domain registrations"
+---
+
+The Namoshi registrar handles the registration of `.btc` and `.citrea` domains. It is an implementation of the [ERC721](https://eips.ethereum.org/EIPS/eip-721) non-fungible token standard, and provides functionality for registering and renewing domains.
+
+## Domain Registration
+
+Domains are registered via the `ETHRegistrarController`, which acts as a controller for the `BaseRegistrarImplementation`.
+
+### Registration Process
+
+1. **Commit**: To prevent front-running, users must first submit a commitment hash (e.g., `makeCommitment`).
+2. **Wait**: After submitting the commitment, users must wait for at least `minCommitmentAge` (usually 1 minute) before revealing their request.
+3. **Register**: Once the wait period is over, users can call `register` with the original parameters to complete the registration.
+
+### Cost
+
+The cost of registration is determined by the length of the name and the duration of registration.
+
+- Shorter names are more expensive to prevent spam.
+- Longer names are cheaper.
+- Registration fees are paid in cBTC.
+
+### Expiry and Grace Period
+
+Domains are registered for a fixed period. After expiry, there is a grace period (usually 90 days) during which the original owner can renew the name.
+
+## Base Registrar Implementation
+
+The `BaseRegistrarImplementation` is the contract that actually owns the `.btc` and `.citrea` TLDs in the ENS registry. It issues subdomains to users who register via the controller.
+
+It implements standard ERC721 functionality:
+
+- `ownerOf(uint256 tokenId)`: Returns the owner of the specified token ID (label hash).
+- `transferFrom(address from, address to, uint256 tokenId)`: Transfers ownership of a name.
+- `approve(address to, uint256 tokenId)`: Approves another address to manage a specific name.
+- `setApprovalForAll(address operator, bool approved)`: Approves an operator to manage all of the user's names.
+
+## Renewals
+
+Domains can be renewed at any time before expiry (and during the grace period) by calling `renew` on the controller.
+
+```solidity
+function renew(string calldata name, uint256 duration) external payable;
+```
+
+This extends the expiration date of the name.

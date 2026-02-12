@@ -1,0 +1,61 @@
+---
+title: "Leaderboards & Social"
+description: "Using Namoshi names for social features and leaderboards"
+---
+
+Namoshi identities are perfect for leaderboards, activity feeds, and social components in your Citrea dApp.
+
+## Fetching Names for Leaderboards
+
+When building a leaderboard, you typically have an array of addresses and scores. You should resolve these addresses to Namoshi names in batches or as the user scrolls.
+
+### Batch Resolution
+
+Using `viem`, you can use the `getEnsName` for each address. For better performance, consider using the `UniversalResolver` to batch these calls or query your own indexer.
+
+```typescript
+import { createPublicClient, http } from 'viem'
+import { citrea } from './chains'
+
+const client = createPublicClient({
+  chain: citrea,
+  transport: http(),
+})
+
+async function resolveLeaderboard(addresses: `0x${string}`[]) {
+  return Promise.all(
+    addresses.map(address => 
+      client.getEnsName({ address }).catch(() => null)
+    )
+  )
+}
+```
+
+## User Profiles & Avatars
+
+Namoshi supports text records, including `avatar`, `github`, `twitter`, and `description`. Use these to populate rich user profiles.
+
+```typescript
+const avatar = await client.getEnsAvatar({
+  name: 'nemo.citrea',
+})
+
+const twitter = await client.getEnsText({
+  name: 'nemo.citrea',
+  key: 'com.twitter',
+})
+```
+
+## Leaderboard UI Components
+
+When displaying a leaderboard, always provide a fallback to the truncated address if no Namoshi name is found.
+
+| Rank | Identity | Points |
+| :--- | :--- | :--- |
+| 1 | `nemo.citrea` | 1500 |
+| 2 | `0x4f0B...9E7b` | 1200 |
+| 3 | `nemo.btc` | 900 |
+
+### Subgraph Integration
+
+For high-performance leaderboards, we recommend using the **Namoshi Subgraph**. It allows you to query names and their associated metadata directly with GraphQL, avoiding multiple RPC calls.

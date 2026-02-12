@@ -1,0 +1,53 @@
+---
+title: "Avatars"
+description: "Resolving profile pictures for Namoshi names"
+---
+
+Namoshi supports the `avatar` text record, allowing users to associate an image with their identity.
+
+## Supported URI Schemes
+
+Avatars can be stored as:
+- **HTTP(S)**: A direct link to an image.
+- **IPFS**: An `ipfs://` CID.
+- **Data**: A base64 encoded image data URI.
+- **NFTs**: An `eip155:` URI pointing to an NFT on Citrea or other EVM chains.
+
+## Resolving Avatars
+
+### Using Wagmi
+
+Wagmi's `useEnsAvatar` hook handles the complexity of resolving different URI schemes and even fetching the image metadata for NFTs.
+
+```javascript
+import { useEnsAvatar } from 'wagmi'
+import { normalize } from 'viem/ens'
+
+export const Avatar = () => {
+  const { data: avatarUrl } = useEnsAvatar({
+    name: normalize('nemo.btc'),
+    chainId: 4114,
+  })
+
+  return <img src={avatarUrl || '/default-avatar.png'} alt="Namoshi Avatar" />
+}
+```
+
+### Using Viem
+
+```javascript
+const avatarUrl = await client.getEnsAvatar({
+  name: 'nemo.btc',
+})
+```
+
+## Reverse Resolution for Avatars
+
+If you only have a user's address and want to display their avatar, you should first perform **reverse resolution** to find their primary name, and then resolve the avatar for that name. Wagmi handles this automatically if you pass an `address` to `useEnsAvatar`.
+
+```javascript
+const { data: avatarUrl } = useEnsAvatar({
+  address: '0x123...abc',
+  chainId: 4114,
+})
+```

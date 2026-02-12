@@ -1,0 +1,50 @@
+---
+title: "Text Records"
+description: "Retrieving social profiles and other metadata"
+---
+
+Namoshi allows users to store arbitrary text metadata associated with their names, such as Twitter handles, GitHub usernames, and descriptions.
+
+## Common Text Keys
+
+By convention, the following keys are often used for social profiles:
+
+- `com.twitter`: Twitter/X handle
+- `com.github`: GitHub username
+- `com.discord`: Discord handle
+- `description`: A short bio
+- `url`: A website URL
+- `avatar`: A URI for the user's profile picture
+
+## Retrieving Text Records
+
+### Using Wagmi
+
+The `useEnsText` hook allows you to fetch a specific text record.
+
+```javascript
+import { useEnsText } from 'wagmi'
+
+export const Profile = () => {
+  const { data: twitter } = useEnsText({
+    name: 'nemo.btc',
+    key: 'com.twitter',
+    chainId: 4114,
+  })
+
+  return <div>Twitter: @{twitter}</div>
+}
+```
+
+### Using Viem
+
+```javascript
+const twitter = await client.getEnsText({
+  name: 'nemo.btc',
+  key: 'com.twitter',
+})
+```
+
+## Best Practices
+
+When fetching multiple text records, consider using the `UniversalResolver` or the Namoshi Subgraph to avoid making multiple RPC calls.

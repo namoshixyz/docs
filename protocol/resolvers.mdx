@@ -1,0 +1,76 @@
+---
+title: "Resolvers"
+description: "Resolving names to addresses and data"
+---
+
+Resolvers are responsible for the actual process of translating names into addresses. Any contract that implements the relevant standards may act as a resolver in Namoshi.
+
+## Interface
+
+Resolvers are specified in [EIP-137](https://eips.ethereum.org/EIPS/eip-137). A resolver must implement the following method:
+
+```solidity
+function supportsInterface(bytes4 interfaceID) constant returns (bool);
+```
+
+This function allows users to determine if a resolver supports a particular record type.
+
+## Record Types
+
+The Namoshi Public Resolver (`PublicResolver.sol`) supports the following record types:
+
+### Citrea (EVM) Address
+
+Resolvers must implement the `addr` function to return the Citrea address associated with a name.
+
+```solidity
+function addr(bytes32 node) constant returns (address ret);
+```
+
+### Other Cryptocurrency Addresses
+
+Resolvers may implement the `addr` function to return the address of other cryptocurrencies associated with a name, as specified in [EIP-2304](https://eips.ethereum.org/EIPS/eip-2304).
+
+```solidity
+function addr(bytes32 node, uint coinType) constant returns (bytes memory ret);
+```
+
+### Content Hash
+
+Resolvers may implement the `contenthash` function to return a content hash associated with a name, as specified in [EIP-1577](https://eips.ethereum.org/EIPS/eip-1577).
+
+```solidity
+function contenthash(bytes32 node) constant returns (bytes memory ret);
+```
+
+### Text Records
+
+Resolvers may implement the `text` function to return text records associated with a name, as specified in [EIP-634](https://eips.ethereum.org/EIPS/eip-634).
+
+```solidity
+function text(bytes32 node, string key) constant returns (string memory ret);
+```
+
+### Name Interface
+
+Resolvers may implement the `name` function to return the name associated with a reverse record, as specified in [EIP-181](https://eips.ethereum.org/EIPS/eip-181).
+
+```solidity
+function name(bytes32 node) constant returns (string memory ret);
+```
+
+### ABI Interface
+
+Resolvers may implement the `ABI` function to return the ABI associated with a name, as specified in [EIP-205](https://eips.ethereum.org/EIPS/eip-205).
+
+```solidity
+function ABI(bytes32 node, uint256 contentTypes) constant returns (uint256, bytes memory);
+```
+
+### Pubkey Interface
+
+Resolvers may implement the `pubkey` function to return the public key associated with a name, as specified in [EIP-619](https://github.com/ethereum/EIPs/pull/619).
+
+```solidity
+function pubkey(bytes32 node) constant returns (bytes32 x, bytes32 y);
+```

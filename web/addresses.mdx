@@ -1,0 +1,82 @@
+---
+title: "Address Lookup"
+description: "Resolving Namoshi names to Citrea and multichain addresses"
+---
+
+The most common use case for Namoshi is resolving a human-readable name like `nemo.btc` to a machine-readable address.
+
+## Resolving Citrea Addresses
+
+To get the Citrea (EVM) address for a name, you can use standard libraries like Wagmi or Viem.
+
+### Using Wagmi
+
+The `useEnsAddress` hook can be used to resolve names on Citrea Mainnet.
+
+```javascript
+import { useEnsAddress } from 'wagmi'
+import { normalize } from 'viem/ens'
+
+export const Name = () => {
+  const { data: address } = useEnsAddress({
+    name: normalize('nemo.btc'),
+    chainId: 4114, // Citrea Mainnet
+  })
+
+  return <div>{address || 'Loading...'}</div>
+}
+```
+
+### Using Viem
+
+```javascript
+import { createPublicClient, http } from 'viem'
+import { citrea } from './chains'
+
+const client = createPublicClient({
+  chain: citrea,
+  transport: http(),
+})
+
+const address = await client.getEnsAddress({
+  name: 'nemo.btc',
+})
+```
+
+## Multichain Addresses
+
+Namoshi supports storing addresses for other blockchains (Bitcoin, Solana, etc.) as specified in [ENSIP-9](https://docs.ens.domains/ensips/9).
+
+### Using Wagmi
+
+You can specify the `coinType` to fetch addresses for other chains.
+
+```javascript
+import { useEnsAddress } from 'wagmi'
+
+export const MyAddresses = () => {
+  // SLIP-0044 Coin Types
+  const { data: bitcoinAddr } = useEnsAddress({ 
+    name: 'nemo.btc', 
+    coinType: 0, // Bitcoin
+    chainId: 4114 
+  })
+  
+  const { data: solanaAddr } = useEnsAddress({ 
+    name: 'nemo.btc', 
+    coinType: 501, // Solana
+    chainId: 4114 
+  })
+
+  return (
+    <div>
+      <p>Bitcoin: {bitcoinAddr}</p>
+      <p>Solana: {solanaAddr}</p>
+    </div>
+  )
+}
+```
+
+<Note>
+  Ensure your `citrea` chain definition includes the Namoshi contract addresses for these hooks to function.
+</Note>

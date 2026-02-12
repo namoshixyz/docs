@@ -1,0 +1,78 @@
+---
+title: "The Registry"
+description: "The core contract of Namoshi"
+---
+
+The Namoshi registry is the core contract that lies at the heart of the Namoshi name resolution. It maintains a mapping from domain name (at a specific node) to the owner, the resolver, and the TTL.
+
+## Contract Architecture
+
+The registry is a simple smart contract that holds a mapping from the **namehash** of a domain to a record of:
+
+- The owner address
+- The resolver address
+- The TTL (Time-to-Live)
+
+It is deliberately simple to reduce gas costs and attack surface.
+
+```solidity
+struct Record {
+    address owner;
+    address resolver;
+    uint64 ttl;
+}
+
+mapping(bytes32 => Record) records;
+```
+
+## Supported TLDs
+
+The Namoshi Registry (`ENSRegistry.sol`) explicitly manages the root nodes for:
+
+- **.btc** (`0xf702f1b03281458158bc938ae02bb9e415467e8a03af28a2c5e55b6a55192b77`)
+- **.citrea** (`0x45e2eb5062b833c50fa834c0e45b3051fe61426b0a0a4d9e6b19239b600a033d`)
+
+Upon deployment, the deployer receives ownership of these nodes and the root node (`0x0`).
+
+## Key Functions
+
+### Setting an Owner
+
+To change the owner of a node, the current owner calls `setOwner`.
+
+```solidity
+function setOwner(bytes32 node, address owner) public;
+```
+
+### Setting a Subnode Owner
+
+To create a subdomain or transfer ownership of an existing one, the owner of the parent node calls `setSubnodeOwner`. This is the primary mechanism for registrars to issue new names.
+
+```solidity
+function setSubnodeOwner(bytes32 parentNode, bytes32 label, address owner) public returns (bytes32);
+```
+
+### Setting a Resolver
+
+To set the resolver for a node, the owner calls `setResolver`.
+
+```solidity
+function setResolver(bytes32 node, address resolver) public;
+```
+
+### Setting the TTL
+
+To set the TTL for caching purposes, the owner calls `setTTL`.
+
+```solidity
+function setTTL(bytes32 node, uint64 ttl) public;
+```
+
+## Events
+
+The registry emits the following events, which indexers and subgraphs use to track the state of the system:
+
+- `Transfer(bytes32 indexed node, address owner)`
+- `NewOwner(bytes32 indexed node, bytes32 indexed label, address owner)`
+- `NewResolver(bytes32 indexed node, address resolver)`
+- `NewTTL(bytes32 indexed node, uint64 ttl)`

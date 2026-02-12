@@ -1,0 +1,35 @@
+---
+title: "Name Wrapper"
+description: "Tokenizing subdomains and managing fuses"
+---
+
+The Namoshi Name Wrapper (`NameWrapper.sol`) is a powerful contract that wraps existing Namoshi names (like `.btc` or `.citrea`) into [ERC1155](https://eips.ethereum.org/EIPS/eip-1155) tokens.
+
+## Why use the Name Wrapper?
+
+1. **ERC1155 Compatibility**: Wrapped names are standard tokens, making them easier to trade on marketplaces and view in wallets.
+2. **Subdomain Management**: It allows for better management of subdomains, including the ability to transfer subdomains as independent tokens.
+3. **Fuses (Permissions)**: The Name Wrapper introduces "fuses," which are granular permissions that can be "burned" to lock certain aspects of a name forever.
+
+## Fuses
+
+Fuses allow owners to give up certain rights to a name. Once a fuse is burned, it cannot be unburned until the name expires and is re-registered.
+
+Key fuses include:
+- **CANNOT_UNWRAP**: The name cannot be taken out of the wrapper.
+- **CANNOT_BURN_FUSES**: No further permissions can be restricted.
+- **CANNOT_TRANSFER**: The name cannot be moved to another owner.
+- **CANNOT_SET_RESOLVER**: The resolver for the name is locked.
+- **CANNOT_CREATE_SUBDOMAIN**: No new subdomains can be created.
+
+## Metadata Service
+
+The Name Wrapper uses a `IMetadataService` to provide the URI for the ERC1155 tokens. This allows Namoshi to provide rich metadata (icons, background colors, registration dates) for every wrapped name.
+
+```solidity
+function uri(uint256 tokenId) public view returns (string memory);
+```
+
+## Integration
+
+When a name is wrapped, the Name Wrapper contract becomes the actual owner of the name in the core Namoshi Registry. The user owns the corresponding ERC1155 token, which represents their right to control the name through the Name Wrapper.

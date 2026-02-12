@@ -1,0 +1,41 @@
+---
+title: "Primary Names"
+description: "Resolving addresses back to Namoshi names"
+---
+
+Reverse resolution allows applications to display human-readable Namoshi names instead of hexadecimal addresses.
+
+## Primary Names
+
+A "Primary Name" (or reverse record) is the name that an address identifies as its main identity. 
+
+## Retrieving Primary Names
+
+### Using Wagmi
+
+The `useEnsName` hook is the simplest way to find the primary name for an address.
+
+```javascript
+import { useEnsName } from 'wagmi'
+
+export const DisplayName = ({ address }) => {
+  const { data: name } = useEnsName({
+    address,
+    chainId: 4114,
+  })
+
+  return <div>{name || address}</div>
+}
+```
+
+### Using Viem
+
+```javascript
+const name = await client.getEnsName({
+  address: '0x123...abc',
+})
+```
+
+## Why call it "Primary Name"?
+
+While an address can own many names, it can only have **one** primary name at a time. This ensures that when someone sees your address in a leaderboard or wallet, they always see the same consistent identity.
