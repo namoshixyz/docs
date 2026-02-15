@@ -9,22 +9,22 @@ Namoshi is the primary naming service for the Citrea ecosystem. Citrea is the fi
 
 To interact with Namoshi, you must configure your application to use the Citrea Mainnet.
 
-| Property | Value |
-| :--- | :--- |
-| **Network Name** | Citrea Mainnet |
-| **Chain ID** | `4114` |
-| **RPC URL** | `https://rpc.mainnet.citrea.xyz` |
-| **Currency Symbol** | `cBTC` |
-| **Block Explorer** | [explorer.mainnet.citrea.xyz](https://explorer.mainnet.citrea.xyz) |
+| Property            | Value                                                              |
+| :------------------ | :----------------------------------------------------------------- |
+| **Network Name**    | Citrea Mainnet                                                     |
+| **Chain ID**        | `4114`                                                             |
+| **RPC URL**         | `https://rpc.mainnet.citrea.xyz`                                   |
+| **Currency Symbol** | `cBTC`                                                             |
+| **Block Explorer**  | [explorer.mainnet.citrea.xyz](https://explorer.mainnet.citrea.xyz) |
 
 ## Core Contract Addresses
 
-| Contract | Address |
-| :--- | :--- |
-| **Namoshi Registry** | `0x9fA2e2370dF8014EE485172bF79d10D6756034A8` |
+| Contract               | Address                                      |
+| :--------------------- | :------------------------------------------- |
+| **Namoshi Registry**   | `0x9fA2e2370dF8014EE485172bF79d10D6756034A8` |
 | **Universal Resolver** | `0xc5Ed1fA34AD1F23F0cD2E36DB288290488B1B493` |
-| **Base Registrar** | `0xf264775e533816Ff2b4B8988697A19662ba767B4` |
-| **Controller** | `0x6f315a6b09B8B3D84879B5436E6738561C79037C` |
+| **Base Registrar**     | `0xf264775e533816Ff2b4B8988697A19662ba767B4` |
+| **Controller**         | `0x6f315a6b09B8B3D84879B5436E6738561C79037C` |
 
 ## Configuring Viem / Wagmi
 
@@ -65,7 +65,7 @@ export const citrea = defineChain({
 
 ### Important: Resolution Configuration
 
-For Wagmi and Viem hooks (like `useEnsName`, `useEnsAddress`, or `getEnsAddress`) to work on Citrea, your chain definition **must** explicitly include the Namoshi contract addresses in the `contracts` object. 
+For Wagmi and Viem hooks (like `useEnsName`, `useEnsAddress`, or `getEnsAddress`) to work on Citrea, your chain definition **must** explicitly include the Namoshi contract addresses in the `contracts` object.
 
 Without these addresses, the libraries will default to looking for ENS on Ethereum Mainnet, which will fail to resolve your `.btc` and `.citrea` names.
 
